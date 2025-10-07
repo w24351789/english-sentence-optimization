@@ -1,62 +1,59 @@
 
 import torch
-import zstd
-from transformers import T5ForConditionalGeneration, T5Tokenizer, Trainer, TrainingArguments
 from datasets import load_dataset
-import os
+from transformers import T5ForConditionalGeneration, T5Tokenizer, Trainer, TrainingArguments, DataCollatorForSeq2Seq
 
-# Load tokenizer and model
-tokenizer = T5Tokenizer.from_pretrained("t5-small")
-model = T5ForConditionalGeneration.from_pretrained("t5-small")
+# Initialize tokenizer and model
+tokenizer = T5Tokenizer.from_pretrained("t5-base", legacy=False)
+model = T5ForConditionalGeneration.from_pretrained("t5-base")
 
 # Load dataset
-dataset = load_dataset("agentlans/grammar-correction")
-print(dataset)
-print(dataset['train'][0])
+dataset = load_dataset("grammarly/coedit")
 
-# Preprocessing function
 def preprocess_function(examples):
-    inputs = [text for text in examples["input_text"]]
-    targets = [text for text in examples["target_text"]]
-    model_inputs = tokenizer(inputs, max_length=128, truncation=True, padding="max_length")
+    inputs = [ex for ex in examples["src"]]
+    targets = [ex for ex in examples["tgt"]]
+    model_inputs = tokenizer(inputs, max_length=128, truncation=True)
 
-    # Setup the tokenizer for targets
     with tokenizer.as_target_tokenizer():
-        labels = tokenizer(targets, max_length=128, truncation=True, padding="max_length")
+        labels = tokenizer(targets, max_length=128, truncation=True)
 
     model_inputs["labels"] = labels["input_ids"]
     return model_inputs
 
-# Apply preprocessing
-tokenized_datasets = dataset.map(preprocess_function, batched=True)
+train_dataset = dataset["train"]
+validation_dataset = dataset["validation"]
+
+tokenized_train_dataset = train_dataset.map(preprocess_function, batched=True)
+tokenized_validation_dataset = validation_dataset.map(preprocess_function, batched=True)
+
+data_collator = DataCollatorForSeq2Seq(tokenizer=tokenizer, model=model)
 
 # Training arguments
 training_args = TrainingArguments(
-    output_dir="./results",
-    num_train_epochs=30,
-    per_device_train_batch_size=8,
-    per_device_eval_batch_size=8,
-    warmup_steps=1000,
-    learning_rate=3e-5,
+    output_dir="/content/drive/MyDrive/english_opt/t5-base-finetuned",
+    per_device_train_batch_size=32,
+    per_device_eval_batch_size=32,
+    num_train_epochs=5,
+    learning_rate=1e-5,
     weight_decay=0.01,
-    logging_dir="./logs",
-    logging_steps=10,
-    dataloader_num_workers=0,
+    save_total_limit=3
 )
 
 # Create Trainer
 trainer = Trainer(
     model=model,
     args=training_args,
-    train_dataset=tokenized_datasets["train"],
+    train_dataset=tokenized_train_dataset,
+    data_collator=data_collator,
 )
 
 # Train the model
 trainer.train()
 
-# Save the model and tokenizer
-model.save_pretrained("./results")
-tokenizer.save_pretrained("./results")
+# The Trainer automatically saves the best model, so we don't need to save it again.
+# model.save_pretrained(training_args.output_dir)
+# tokenizer.save_pretrained(training_args.output_dir)
 
-print("Training complete and model saved.")
+print(f"Training complete. Model saved to {training_args.output_dir}")
 
