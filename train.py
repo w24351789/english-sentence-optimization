@@ -4,8 +4,8 @@ from datasets import load_dataset
 from transformers import T5ForConditionalGeneration, T5Tokenizer, Trainer, TrainingArguments, DataCollatorForSeq2Seq
 
 # Initialize tokenizer and model
-tokenizer = T5Tokenizer.from_pretrained("t5-base", legacy=False)
-model = T5ForConditionalGeneration.from_pretrained("t5-base")
+tokenizer = T5Tokenizer.from_pretrained("t5-small", legacy=False)
+model = T5ForConditionalGeneration.from_pretrained("t5-small")
 
 # Load dataset
 dataset = load_dataset("grammarly/coedit")
@@ -31,11 +31,11 @@ data_collator = DataCollatorForSeq2Seq(tokenizer=tokenizer, model=model)
 
 # Training arguments
 training_args = TrainingArguments(
-    output_dir="/content/drive/MyDrive/english_opt/t5-base-finetuned",
+    output_dir="/content/drive/MyDrive/english_opt/t5-small-finetuned",
     per_device_train_batch_size=32,
     per_device_eval_batch_size=32,
     num_train_epochs=5,
-    learning_rate=1e-5,
+    learning_rate=2e-5,  # Adjusted for t5-small
     weight_decay=0.01,
     save_total_limit=3
 )
