@@ -32,8 +32,15 @@ data_collator = DataCollatorForSeq2Seq(tokenizer=tokenizer, model=model)
 # Training arguments
 training_args = TrainingArguments(
     output_dir="/content/drive/MyDrive/english_opt/t5-small-finetuned",
-    per_device_train_batch_size=32,
-    per_device_eval_batch_size=32,
+    evaluation_strategy="steps",
+    eval_steps=500,
+    save_strategy="steps",
+    save_steps=500,
+    load_best_model_at_end=True,
+    metric_for_best_model="eval_loss",
+    greater_is_better=False,
+    per_device_train_batch_size=64,
+    per_device_eval_batch_size=64,
     num_train_epochs=5,
     learning_rate=2e-5,  # Adjusted for t5-small
     weight_decay=0.01,
@@ -45,6 +52,7 @@ trainer = Trainer(
     model=model,
     args=training_args,
     train_dataset=tokenized_train_dataset,
+    eval_dataset=tokenized_validation_dataset,
     data_collator=data_collator,
 )
 
