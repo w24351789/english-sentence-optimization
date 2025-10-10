@@ -11,8 +11,8 @@ else:
 
 # Load the fine-tuned model and tokenizer
 model_path = "/content/drive/MyDrive/t5-english-sentence-optimizer/results"
-model = T5ForConditionalGeneration.from_pretrained(model_path).to(device)
-tokenizer = T5Tokenizer.from_pretrained(model_path)
+model = T5ForConditionalGeneration.from_pretrained(model_path, local_files_only=True).to(device)
+tokenizer = T5Tokenizer.from_pretrained(model_path, local_files_only=True)
 
 def optimize_sentence(input_text):
     """Optimizes a sentence using the fine-tuned T5 model."""
