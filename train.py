@@ -44,7 +44,7 @@ training_args = TrainingArguments(
     num_train_epochs=5,
     learning_rate=2e-5,  # Adjusted for t5-small
     weight_decay=0.01,
-    save_total_limit=3
+    save_total_limit=1
 )
 
 # Create Trainer

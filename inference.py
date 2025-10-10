@@ -1,4 +1,4 @@
-from pathlib import Path
+import os
 import torch
 from transformers import T5ForConditionalGeneration, T5Tokenizer
 
@@ -10,8 +10,13 @@ elif torch.backends.mps.is_available():
 else:
     device = torch.device("cpu")
 
+# Find the latest checkpoint
+results_dir = "/content/drive/MyDrive/t5-english-sentence-optimizer/results"
+checkpoints = [d for d in os.listdir(results_dir) if d.startswith("checkpoint-")]
+latest_checkpoint = sorted(checkpoints, key=lambda x: int(x.split("-")[1]))[-1]
+model_path = os.path.join(results_dir, latest_checkpoint)
+
 # Load the fine-tuned model and tokenizer
-model_path = Path("/content/drive/MyDrive/t5-english-sentence-optimizer/results")
 model = T5ForConditionalGeneration.from_pretrained(model_path).to(device)
 tokenizer = T5Tokenizer.from_pretrained(model_path)
 
