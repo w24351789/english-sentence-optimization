@@ -6,7 +6,7 @@ from transformers import T5ForConditionalGeneration, T5Tokenizer, Trainer, Train
 # --- MODIFIED: Step 1 ---
 # Load YOUR fine-tuned model (V1) as the starting point, not the original "t5-small".
 # This is the most critical change for incremental training.
-results_dir = "/content/drive/MyDrive/english-sentence-optimization/results_v2"
+results_dir = "/content/drive/MyDrive/english-sentence-optimization/results_v3"
 checkpoints = [d for d in os.listdir(results_dir) if d.startswith("checkpoint-")]
 latest_checkpoint = sorted(checkpoints, key=lambda x: int(x.split("-")[1]))[-1]
 YOUR_MODEL_V1_PATH = os.path.join(results_dir, latest_checkpoint)
@@ -48,7 +48,7 @@ data_collator = DataCollatorForSeq2Seq(tokenizer=tokenizer, model=model)
 # Adjust training arguments for fine-tuning on a small, specific dataset.
 training_args = TrainingArguments(
     # Save the new model (V2) to a DIFFERENT directory to avoid overwriting your V1 model.
-    output_dir="/content/drive/MyDrive/english-sentence-optimization/results_v3",
+    output_dir="/content/drive/MyDrive/english-sentence-optimization/results_v4",
     
     # For a small dataset, we can evaluate more frequently and train for more epochs.
     eval_strategy="steps",
