@@ -22,7 +22,7 @@ model = T5ForConditionalGeneration.from_pretrained(YOUR_MODEL_V1_PATH)
 # Load the new, small, targeted dataset for augmented training.
 print("Loading augmented dataset...")
 # Make sure 'augmented_data.csv' is in the same directory or provide the full path.
-augmented_dataset = load_dataset("csv", data_files="augmented_data.csv")
+augmented_dataset = load_dataset("csv", data_files="/content/drive/MyDrive/english-sentence-optimization/augmented_data.csv")
 
 
 # The preprocess function remains the same.
