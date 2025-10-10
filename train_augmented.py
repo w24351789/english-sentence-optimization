@@ -1,11 +1,15 @@
 import torch
+import os
 from datasets import load_dataset
 from transformers import T5ForConditionalGeneration, T5Tokenizer, Trainer, TrainingArguments, DataCollatorForSeq2Seq
 
 # --- MODIFIED: Step 1 ---
 # Load YOUR fine-tuned model (V1) as the starting point, not the original "t5-small".
 # This is the most critical change for incremental training.
-YOUR_MODEL_V1_PATH = "/content/drive/MyDrive/english-sentence-optimization/results"
+results_dir = "/content/drive/MyDrive/english-sentence-optimization/results"
+checkpoints = [d for d in os.listdir(results_dir) if d.startswith("checkpoint-")]
+latest_checkpoint = sorted(checkpoints, key=lambda x: int(x.split("-")[1]))[-1]
+YOUR_MODEL_V1_PATH = os.path.join(results_dir, latest_checkpoint)
 
 print(f"Loading tokenizer from: {YOUR_MODEL_V1_PATH}")
 tokenizer = T5Tokenizer.from_pretrained(YOUR_MODEL_V1_PATH, legacy=False)
