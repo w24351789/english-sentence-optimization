@@ -10,7 +10,7 @@ else:
     device = torch.device("cpu")
 
 # Load the fine-tuned model and tokenizer
-model_path = "/content/drive/MyDrive/english_opt/t5-small-finetuned"
+model_path = "/content/drive/MyDrive/t5-english-sentence-optimizer/results"
 model = T5ForConditionalGeneration.from_pretrained(model_path).to(device)
 tokenizer = T5Tokenizer.from_pretrained(model_path)
 

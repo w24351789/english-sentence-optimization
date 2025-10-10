@@ -31,7 +31,7 @@ data_collator = DataCollatorForSeq2Seq(tokenizer=tokenizer, model=model)
 
 # Training arguments
 training_args = TrainingArguments(
-    output_dir="/content/drive/MyDrive/english_opt/t5-small-finetuned",
+    output_dir="/content/drive/MyDrive/t5-english-sentence-optimizer/results",
     eval_strategy="steps",
     eval_steps=500,
     save_strategy="steps",
