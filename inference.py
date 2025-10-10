@@ -1,3 +1,4 @@
+from pathlib import Path
 import torch
 from transformers import T5ForConditionalGeneration, T5Tokenizer
 
@@ -10,9 +11,9 @@ else:
     device = torch.device("cpu")
 
 # Load the fine-tuned model and tokenizer
-model_path = "/content/drive/MyDrive/t5-english-sentence-optimizer/results"
-model = T5ForConditionalGeneration.from_pretrained(model_path, local_files_only=True).to(device)
-tokenizer = T5Tokenizer.from_pretrained(model_path, local_files_only=True)
+model_path = Path("/content/drive/MyDrive/t5-english-sentence-optimizer/results")
+model = T5ForConditionalGeneration.from_pretrained(model_path).to(device)
+tokenizer = T5Tokenizer.from_pretrained(model_path)
 
 def optimize_sentence(input_text):
     """Optimizes a sentence using the fine-tuned T5 model."""
