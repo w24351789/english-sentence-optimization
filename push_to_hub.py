@@ -5,10 +5,10 @@ from transformers import T5ForConditionalGeneration, T5Tokenizer
 username = "w24351789"
 
 # The name of the repository on the Hugging Face Hub
-repo_name = "t5-english-sentence-optimizer"
+repo_name = "english-sentence-optimizer"
 
 # The path to your fine-tuned model
-model_path = "/content/drive/MyDrive/t5-english-sentence-optimizer/results"
+model_path = "/content/drive/MyDrive/english-sentence-optimizer/results"
 # ---------------------
 
 # Construct the repository ID

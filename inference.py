@@ -11,7 +11,7 @@ else:
     device = torch.device("cpu")
 
 # Find the latest checkpoint
-results_dir = "/content/drive/MyDrive/t5-english-sentence-optimizer/results"
+results_dir = "/content/drive/MyDrive/english-sentence-optimizer/results"
 checkpoints = [d for d in os.listdir(results_dir) if d.startswith("checkpoint-")]
 latest_checkpoint = sorted(checkpoints, key=lambda x: int(x.split("-")[1]))[-1]
 model_path = os.path.join(results_dir, latest_checkpoint)
